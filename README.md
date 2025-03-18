@@ -2,5 +2,11 @@
 --------------------------------------
 📌 Program ini dibuat untuk proyek mata kuliah Struktur Data dan Algoritma.  
 🎯 Tujuannya untuk mengonversi ekspresi aritmatika antara Infix, Postfix, dan Prefix.
-chat gpt ahh emoji 🤣
-tau aja banh, biar rapi sikit, kalau gak ada emot serasa hambar dan kaku
+✨ Fitur Program
+Program ini bisa melakukan konversi ekspresi aritmatika berikut:
+✅ Infix ➝ Postfix
+✅ Infix ➝ Prefix
+✅ Postfix ➝ Infix
+✅ Prefix ➝ Infix
+✅ Prefix ➝ Postfix
+✅ Postfix ➝ Prefix
