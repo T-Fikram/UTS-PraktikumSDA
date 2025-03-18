@@ -5,6 +5,7 @@
 
 #define MAX 100
 
+// Struktur data untuk stack, dipakai buat simpan operator pas konversi
 typedef struct{
     int top;
     char item[MAX];
@@ -45,6 +46,7 @@ int main() {
     //keknya nanti kita buat perulangan aja di sini
     printf("1. Infix ke Postfix\n2. Infix ke Prefix\n-------------------------\n");
     printf("Ahoi! Nak buat ape?\n");
+    // Ambil pilihan dari user 
     pilihan = getch();
     switch(pilihan){
         case 1 || 2:
@@ -60,7 +62,7 @@ int main() {
             }
         
         case 3 || 4:
-            //kita rehat sejenak
+            //kita rehat sejenak, btw emang bisa bentuk switchnya macam tu? 
 
         default:
     }
