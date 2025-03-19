@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define MAX 100
 #define OPERAND(ch) ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9'))
@@ -39,6 +40,10 @@ char pop(Stack *s) {
 }
 
 char peek(Stack *s) {
+    if (cek_kosong(s)) {
+        printf("Stack Kosong! mau tengok apa coba\n");
+        exit(EXIT_FAILURE);
+    }
     return s->item[s->top];
 }
 
@@ -57,6 +62,7 @@ int prioritas(char op) {
 
 // Prototype
 void infixToPostfix(char infix[], char postfix[]);
+void infixToPrefix(char infix[], char prefix[]);
 
 // Main function
 int main() {
@@ -80,7 +86,7 @@ int main() {
                 printf("Hasil nibak peurubahan nyan nakeuh lagèe nyoe : %s\n", hasil);
             }
             else if (pilihan == 2) {
-                // infixToPrefix(ekspresi, hasil);
+                infixToPrefix(ekspresi, hasil);
                 printf("Hasil nibak peurubahan nyan nakeuh lagèe nyoe : %s\n", hasil);
             }
             break;
@@ -120,7 +126,38 @@ void infixToPostfix(char infix[], char postfix[]) {
         }
         i++; 
     }
+    
+ void infixToPrefix(char infix[], char prefix[]) {
+     Stack s;
+     inisialisasi(&s);
+     int i = 0, j = 0;
+     char temp[MAX];
 
+     // Balik infix
+     int len = strlen(infix);
+     for (i = len - 1, j = 0; i >= 0; i--, j++) {
+         if (infix[i] == '(') {
+             temp[j] = ')';
+         } else if (infix[i] == ')') {
+             temp[j] = '(';
+         } else {
+             temp[j] = infix[i];
+         }
+     }
+     temp[j] = '\0'; // Null-terminator
+
+     // Konversi infix yang sudah dibalik ke postfix
+     char hasil[MAX];
+     infixToPostfix(temp, hasil);
+
+     // Balik hasil postfix jadi prefix
+     len = strlen(hasil);
+     for (i = len - 1, j = 0; i >= 0; i--, j++) {
+         prefix[j] = hasil[i];
+     }
+     prefix[j] = '\0';
+  }
+    
     while (!cek_kosong(&s)) {
         postfix[j++] = pop(&s); 
     }
