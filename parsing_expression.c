@@ -72,6 +72,9 @@ int main() {
         case 2:
             printf("tamong operasi infix di sini --> ");
             fgets(ekspresi, MAX, stdin);
+            // Menghapus newline ('\n') yang mungkin terbawa dari fgets
+            ekspresi[strcspn(ekspresi, "\n")] = 0;
+            
             if (pilihan == 1) {
                 infixToPostfix(ekspresi, hasil);
                 printf("Hasil nibak peurubahan nyan nakeuh lagèe nyoe : %s\n", hasil);
@@ -86,6 +89,7 @@ int main() {
             // kita rehat sejenak
 
         default:
+            printf("Pilihan tidak valid!\n");
             break;
     }
     return 0;
