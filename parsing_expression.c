@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -126,8 +127,13 @@ void infixToPostfix(char infix[], char postfix[]) {
         }
         i++; 
     }
-    
- void infixToPrefix(char infix[], char prefix[]) {
+    while (!cek_kosong(&s)) {
+        postfix[j++] = pop(&s); 
+    }
+
+    postfix[j] = '\0'; 
+}
+ void infixToPrefix(char infix[], char prefix[]){
      Stack s;
      inisialisasi(&s);
      int i = 0, j = 0;
@@ -149,18 +155,18 @@ void infixToPostfix(char infix[], char postfix[]) {
      // Konversi infix yang sudah dibalik ke postfix
      char hasil[MAX];
      infixToPostfix(temp, hasil);
-
+     
      // Balik hasil postfix jadi prefix
-     len = strlen(hasil);
-     for (i = len - 1, j = 0; i >= 0; i--, j++) {
+     int length = strlen(hasil);
+     for (i = length - 1, j = 0; i >= 0; i--, j++) {
          prefix[j] = hasil[i];
      }
      prefix[j] = '\0';
-  }
+  
     
-    while (!cek_kosong(&s)) {
-        postfix[j++] = pop(&s); 
+    while(!cek_kosong(&s)) {
+        prefix[j++] = pop(&s); 
     }
 
-    postfix[j] = '\0'; 
+    prefix[j] = '\0'; 
 }
