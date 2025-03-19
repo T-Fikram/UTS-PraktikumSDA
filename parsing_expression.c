@@ -23,10 +23,18 @@ bool cek_penuh(Stack *s) {
 }
 
 void push(Stack *s, char value) {
+    if (cek_penuh(s)) {
+        printf("Stacknya Udah Penuh hai!\n");
+        return;
+    }
     s->item[++(s->top)] = value;
 }
 
 char pop(Stack *s) {
+    if (cek_kosong(s)) {
+        printf("Stacknya Masih Kosong lah cik!\n");
+        exit(EXIT_FAILURE);
+    }
     return s->item[(s->top)--];
 }
 
