@@ -3,13 +3,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 
 #define MAX 100
 #define OPERAND(ch) ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9'))
 
 typedef struct {
     int top;
-    char item[MAX];
+    char *item[MAX];
 } Stack;
 
 void inisialisasi(Stack *s) {
@@ -24,7 +25,7 @@ bool cek_penuh(Stack *s) {
     return (s->top == MAX - 1);
 }
 
-void push(Stack *s, char value) {
+void push(Stack *s, char *value) {
     if (cek_penuh(s)) {
         printf("Stacknya Udah Penuh hai!\n");
         return;
@@ -32,7 +33,7 @@ void push(Stack *s, char value) {
     s->item[++(s->top)] = value;
 }
 
-char pop(Stack *s) {
+char* pop(Stack *s) {
     if (cek_kosong(s)) {
         printf("Stacknya Masih Kosong lah cik!\n");
         exit(EXIT_FAILURE);
@@ -60,17 +61,31 @@ int prioritas(char op) {
             return 0;
     }
 }
+void balik_string(char str[]) {
+    int length = strlen(str);
+    int i, j;
+    for (i = 0, j = length - 1; i < j; i++, j--) {
+        char temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+    }
+}
+int isOperator(char ch) {
+    return ch == '+' || ch == '-' || ch == '*' || ch == '/';
+}
 
 // Prototype
 void infixToPostfix(char infix[], char postfix[]);
 void infixToPrefix(char infix[], char prefix[]);
+void PostfixToInfix(char postfix[], char infix[]);
+void PostfixToPrefix(char postfix[], char prefix[]);
 
 // Main function
 int main() {
     int pilihan;
     char ekspresi[MAX], hasil[MAX];
     // keknya nanti kita buat perulangan aja di sini
-    printf("1. Infix ke Postfix\n2. Infix ke Prefix\n-------------------------\n");
+    printf("1. Infix ke Postfix\n2. Infix ke Prefix\n3. Postfix ke Infix\n-------------------------\n");
     printf("Ahoi! Nak buat ape? -> ");
     scanf("%d", &pilihan);
     getchar(); // To consume the newline character after scanf
@@ -93,7 +108,23 @@ int main() {
             break;
         case 3:
         case 4:
-            // kita rehat sejenak
+            printf("tamong operasi Postfix di sini --> ");
+            fgets(ekspresi, MAX, stdin);
+            ekspresi[strcspn(ekspresi, "\n")] = 0;
+
+            if (pilihan == 3) {
+                PostfixToInfix(ekspresi, hasil);
+                printf("Hasil nibak peurubahan nyan nakeuh lagèe nyoe : %s\n", hasil);
+            }
+            else if (pilihan == 4) {
+                PostfixToPrefix(ekspresi, hasil);
+                printf("Hasil nibak peurubahan nyan nakeuh lagèe nyoe : %s\n", hasil);
+            }
+            break;
+        case 5:
+        case 6:
+            //kita rehat sejenak
+            break;
 
         default:
             printf("Pilihan tidak valid!\n");
@@ -133,40 +164,89 @@ void infixToPostfix(char infix[], char postfix[]) {
 
     postfix[j] = '\0'; 
 }
- void infixToPrefix(char infix[], char prefix[]){
-     Stack s;
-     inisialisasi(&s);
-     int i = 0, j = 0;
-     char temp[MAX];
+ 
+void infixToPrefix(char infix[], char prefix[]) {
+    Stack s;
+    inisialisasi(&s);
+    char temp[MAX];
 
-     // Balik infix
-     int len = strlen(infix);
-     for (i = len - 1, j = 0; i >= 0; i--, j++) {
-         if (infix[i] == '(') {
-             temp[j] = ')';
-         } else if (infix[i] == ')') {
-             temp[j] = '(';
-         } else {
-             temp[j] = infix[i];
-         }
-     }
-     temp[j] = '\0'; // Null-terminator
+    // Balik infix
+    balik_string(infix);
 
-     // Konversi infix yang sudah dibalik ke postfix
-     char hasil[MAX];
-     infixToPostfix(temp, hasil);
-     
-     // Balik hasil postfix jadi prefix
-     int length = strlen(hasil);
-     for (i = length - 1, j = 0; i >= 0; i--, j++) {
-         prefix[j] = hasil[i];
-     }
-     prefix[j] = '\0';
-  
-    
-    while(!cek_kosong(&s)) {
-        prefix[j++] = pop(&s); 
+    // Konversi infix yang sudah dibalik ke postfix
+    infixToPostfix(infix, temp);
+
+    // Balik hasil postfix jadi prefix
+    balik_string(temp);
+    strcpy(prefix, temp);
+}
+
+void PostfixToInfix(char postfix[], char infix[]) {
+    Stack s;
+    inisialisasi(&s);
+
+    for (int i = 0; postfix[i] != '\0'; i++) {
+        char ch = postfix[i];
+
+        // push kalau jumpa operand
+        if (OPERAND(ch)) {
+            char *operand = (char *)malloc(2 * sizeof(char)); 
+            sprintf(operand, "%c", ch); // ubah operand ke string
+            push(&s, operand); // push operand
+        }
+        // kalau opearotr
+        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
+            //pop 2 operand
+            char *op2 = pop(&s); // operand 2
+            char *op1 = pop(&s); // operand 1
+
+            // Allocate memory for the new infix expression
+            char *newExpr = (char *)malloc((strlen(op1) + strlen(op2) + 4) * sizeof(char));
+            sprintf(newExpr, "(%s%c%s)", op1, ch, op2); // menggabungkan operand dan operator
+
+            // Push infix baru ke stack
+            push(&s, newExpr);
+
+            // free memory tuk operand
+            free(op1);
+            free(op2);
+        }
     }
 
-    prefix[j] = '\0'; 
+    //masukkan hasil ke infix(sekaligus)
+    strcpy(infix, pop(&s));
+}
+
+void PostfixToPrefix(char postfix[], char prefix[]) {
+    Stack s;
+    inisialisasi(&s);
+
+    for (int i = 0; postfix[i] != '\0'; i++) {
+        char ch = postfix[i];
+
+        // push jika operand
+        if (OPERAND(ch)) {
+            char *operand = (char *)malloc(2 * sizeof(char)); 
+            sprintf(operand, "%c", ch); // ubah operand ke string
+            push(&s, operand); // push operand
+        }
+        // jika operator, maka
+        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
+            // Pop 2 operand
+            char *op2 = pop(&s); // Operand 2
+            char *op1 = pop(&s); // Operand 1
+
+            // alokasi memori tuk prefix baru
+            char *newExpr = (char *)malloc((strlen(op1) + strlen(op2) + 2) * sizeof(char));
+            sprintf(newExpr, "%c%s%s", ch, op1, op2); //gabungkan operator dan operand
+
+            // push prefix baru
+            push(&s, newExpr);
+            free(op1);
+            free(op2);
+        }
+    }
+
+    // masukkan stack ke prefix
+    strcpy(prefix, pop(&s));
 }
