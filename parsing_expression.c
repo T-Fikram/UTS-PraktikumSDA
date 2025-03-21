@@ -87,7 +87,8 @@ int main() {
     int pilihan;
     char ekspresi[MAX], hasil[MAX];
     // keknya nanti kita buat perulangan aja di sini
-    printf("1. Infix ke Postfix\n2. Infix ke Prefix\n3. Postfix ke Infix\n4. Postfix ke Prefix\n5. Prefix ke Infix\n6.Prefix ke Postfix\n-------------------------\n");
+    while(1){
+    printf("1. Infix ke Postfix\n2. Infix ke Prefix\n3. Postfix ke Infix\n4. Postfix ke Prefix\n5. Prefix ke Infix\n6. Prefix ke Postfix\n7. Keluar\n-------------------------\n");
     printf("Ahoi! Nak buat ape? -> ");
     scanf("%d", &pilihan);
     getchar(); // To consume the newline character after scanf
@@ -122,6 +123,8 @@ int main() {
                 PostfixToPrefix(ekspresi, hasil);
                 printf("Hasil nibak peurubahan nyan nakeuh lagèe nyoe : %s\n", hasil);
             }
+            printf("Ketik enter untuk lanjut");
+            scanf("%c", &pilihan);
             break;
         case 5:
         case 6:
@@ -137,13 +140,20 @@ int main() {
                 PrefixToPostfix(ekspresi, hasil);
                 printf("Hasil nibak peurubahan nyan nakeuh lagèe nyoe : %s\n", hasil);
             }
+            printf("Ketik enter untuk lanjut");
+            scanf("%c", &pilihan);
             break;
+        case 7:
+         printf("sampai jumpa || adios");
+         return 0;
 
         default:
             printf("Pilihan tidak valid!\n");
             break;
     }
-    return 0;
+    
+}
+return 0;
 }
 
 void infixToPostfix(char infix[], char postfix[]) {
