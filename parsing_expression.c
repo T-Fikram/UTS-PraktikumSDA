@@ -9,7 +9,7 @@
 
 typedef struct {
     int top;
-    char *item[MAX]; // Stack stores strings (char arrays)
+    char *item[MAX]; // Stack menerima string
 } Stack;
 
 void inisialisasi(Stack *s) {
@@ -86,15 +86,15 @@ void PrefixToPostfix(char prefix[], char postfix[]);
 int main() {
     int pilihan;
     char ekspresi[MAX], hasil[MAX];
-    // keknya nanti kita buat perulangan aja di sini
+    // program akan terus berulang sampai dipilih exit
     while(1){
     printf("1. Infix ke Postfix\n2. Infix ke Prefix\n3. Postfix ke Infix\n4. Postfix ke Prefix\n5. Prefix ke Infix\n6. Prefix ke Postfix\n7. Keluar\n-------------------------\n");
     printf("Ahoi! Nak buat ape? -> ");
     scanf("%d", &pilihan);
-    getchar(); // To consume the newline character after scanf
+    getchar(); //hapus 'enter' dari pengguna
     switch (pilihan) {
         case 1:
-        case 2:
+        case 2://infix to n
             printf("\ntamong operasi infix di sini --> ");
             fgets(ekspresi, MAX, stdin);
             // Menghapus newline ('\n') yang mungkin terbawa dari fgets
@@ -110,7 +110,7 @@ int main() {
             }
             break;
         case 3:
-        case 4:
+        case 4://postfix to n
             printf("tamong operasi Postfix di sini --> ");
             fgets(ekspresi, MAX, stdin);
             ekspresi[strcspn(ekspresi, "\n")] = 0;
@@ -127,7 +127,7 @@ int main() {
             scanf("%c", &pilihan);
             break;
         case 5:
-        case 6:
+        case 6://prefix to n
             printf("tamong operasi Prefix di sini --> ");
             fgets(ekspresi, MAX, stdin);
             ekspresi[strcspn(ekspresi, "\n")] = 0;
@@ -143,7 +143,7 @@ int main() {
             printf("Ketik enter untuk lanjut");
             scanf("%c", &pilihan);
             break;
-        case 7:
+        case 7://keluar
          printf("sampai jumpa || adios");
          return 0;
 
@@ -167,7 +167,11 @@ void infixToPostfix(char infix[], char postfix[]) {
         if (OPERAND(ch)) {
             // tambah ke postfix kalau operand
             postfix[j++] = ch;
-        } else if (ch == '(') {
+        } else if(ch ==' '){
+            i++; 
+            continue;
+        } 
+        else if (ch == '(') {
             // push ke stack
             char *parenthesis = (char *)malloc(2 * sizeof(char));
             sprintf(parenthesis, "%c", ch);
@@ -182,13 +186,13 @@ void infixToPostfix(char infix[], char postfix[]) {
             char *leftParenthesis = pop(&s); // pop ( dari stack
             free(leftParenthesis); 
         } else {
-            // If it's an operator, pop higher-priority operators from the stack
+            //kalau operator, pop operator dgn prioritas lebih tinggi dari stack
             while (!cek_kosong(&s) && prioritas(peek(&s)[0]) >= prioritas(ch)) {
                 char *op = pop(&s);
-                postfix[j++] = op[0]; // Add the operator to the postfix expression
-                free(op); // Free the memory allocated for the operator
+                postfix[j++] = op[0]; //masukkan operator ke postfix
+                free(op); 
             }
-            // Push the current operator onto the stack as a string
+            //push operator
             char *operator = (char *)malloc(2 * sizeof(char));
             sprintf(operator, "%c", ch);
             push(&s, operator);
@@ -196,7 +200,7 @@ void infixToPostfix(char infix[], char postfix[]) {
         i++; 
     }
 
-    // Pop any remaining operators from the stack
+    //pop semua dan masukkan ke postfix
     while (!cek_kosong(&s)) {
         char *op = pop(&s);
         postfix[j++] = op[0]; 
@@ -234,7 +238,9 @@ void PostfixToInfix(char postfix[], char infix[]) {
             char *operand = (char *)malloc(2 * sizeof(char)); 
             sprintf(operand, "%c", ch); // ubah operand ke string
             push(&s, operand); // push operand
-        }
+        } else if(ch ==' '){
+            continue;//ini untuk skip spasi
+        } 
         // kalau operator
         else if (apakah_operator(ch)) {
             // pop 2 operand
@@ -267,8 +273,10 @@ void PostfixToPrefix(char postfix[], char prefix[]) {
         if (OPERAND(ch)) {
             char *operand = (char *)malloc(2 * sizeof(char)); 
             sprintf(operand, "%c", ch); // ubah operand ke string
-            push(&s, operand); // push operand
-        }
+            push(&s, operand); 
+        }else if(ch ==' '){
+            continue;
+        } 
         // jika operator, maka
         else if (apakah_operator(ch)) {
             // Pop 2 operand
@@ -302,7 +310,9 @@ void PrefixToInfix(char prefix[], char infix[]) {
             char *operand = (char *)malloc(2 * sizeof(char)); 
             sprintf(operand, "%c", ch); 
             push(&s, operand);
-        }
+        }else if(ch ==' '){
+            continue;
+        } 
         // kalau operator
         else if (apakah_operator(ch)) {
             // pop dua operand secara urut
@@ -338,7 +348,10 @@ void PrefixToPostfix(char prefix[], char postfix[]) {
             char *operand = (char *)malloc(2 * sizeof(char));
             sprintf(operand, "%c", ch);
             push(&s, operand);
-        } else if (apakah_operator(ch)) {
+        }else if(ch ==' '){
+            continue;
+        }  
+        else if (apakah_operator(ch)) {
             char *op1 = pop(&s);
             char *op2 = pop(&s);
             char *newExpr = (char *)malloc((strlen(op1) + strlen(op2) + 2) * sizeof(char));
