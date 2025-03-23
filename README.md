@@ -14,32 +14,28 @@ Program ini bisa melakukan konversi ekspresi aritmatika berikut:
 ___
 📝Contoh Input & Output:
 
-1️⃣ Infix ➝ Postfix
-Input: (A+B)\*C
-Output: AB+C\*
+1️⃣ Infix ➝ Postfix  
+Input: (A+B)\*C  
+Output: AB+C\*  
 
-2️⃣ Infix ➝ Prefix
-Input: (A+B)*C
-Output: *+ABC
+2️⃣ Infix ➝ Prefix  
+Input: (A+B)*C  
+Output: *+ABC  
 
+3️⃣ Postfix ➝ Infix  
+Input: AB+C*  
+Output: (A+B)*C  
 
-3️⃣ Postfix ➝ Infix
-Input: AB+C*
-Output: (A+B)*C
+4️⃣ Prefix ➝ Infix  
+Input: *+ABC  
+Output: (A+B)*C  
 
+5️⃣ Prefix ➝ Postfix  
+Input: \*+ABC  
+Output: AB+C\*  
 
-4️⃣ Prefix ➝ Infix
-Input: *+ABC
-Output: (A+B)*C
-
-
-5️⃣ Prefix ➝ Postfix
-Input: \*+ABC
-Output: AB+C\*
-
-
-6️⃣ Postfix ➝ Prefix
-Input: AB+C*
-Output: *+ABC
+6️⃣ Postfix ➝ Prefix  
+Input: AB+C*  
+Output: *+ABC  
 ___
 > ⚠️ Peringatan: Pastikan input sesuai format di bawah ini agar tidak terjadi error.
